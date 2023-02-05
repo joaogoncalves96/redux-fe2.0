@@ -1,17 +1,46 @@
-import { SetLikeAction, SetPostAction, SetRemovePostAction } from "./actions";
+import {
+  SetCommentPostAction,
+  SetLikeAction,
+  SetPostAction,
+  SetRemovePostAction,
+} from "./actions";
 
 const initialState = {
   posts: [
-    { text: "text", likes: [], comments: [], username: "joao" },
-    { text: "text1", likes: [], comments: [], username: "joao1234" },
+    {
+      text: "text",
+      likes: [],
+      comments: ["first comment", "second"],
+      username: "joao",
+    },
+    {
+      text: "text1",
+      likes: [],
+      comments: ["first comment", "second"],
+      username: "joao1234",
+    },
   ],
 };
 
 const postReducer = (
   state = initialState,
-  action: SetPostAction | SetLikeAction | SetRemovePostAction
+  action:
+    | SetPostAction
+    | SetLikeAction
+    | SetRemovePostAction
+    | SetCommentPostAction
 ) => {
   switch (action.type) {
+    case "ADD_COMMENT":
+      return {
+        ...state,
+        posts: state.posts.map((post) => {
+          return {
+            ...post,
+            comments: [...post.comments, action.payload.comment],
+          };
+        }),
+      };
     case "REMOVE_POST":
       const { post } = action.payload;
       return {
