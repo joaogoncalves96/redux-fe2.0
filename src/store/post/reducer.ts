@@ -1,3 +1,4 @@
+import shortid from "shortid";
 import {
   SetCommentPostAction,
   SetLikeAction,
@@ -8,14 +9,16 @@ import {
 const initialState = {
   posts: [
     {
+      id: "1",
       text: "text",
       likes: [],
       comments: ["first comment", "second"],
       username: "joao",
     },
     {
+      id: "2",
       text: "text1",
-      likes: [],
+      likes: ["asd", "qwerty"],
       comments: ["first comment", "second"],
       username: "joao1234",
     },
@@ -35,10 +38,13 @@ const postReducer = (
       return {
         ...state,
         posts: state.posts.map((post) => {
-          return {
-            ...post,
-            comments: [...post.comments, action.payload.comment],
-          };
+          if (post.id === action.payload.postId) {
+            return {
+              ...post,
+              comments: [...post.comments, action.payload.comment],
+            };
+          }
+          return post;
         }),
       };
     case "REMOVE_POST":
@@ -51,23 +57,26 @@ const postReducer = (
     case "ADD_POST":
       return {
         ...state,
-        posts: [...state.posts, action.payload],
+        posts: [
+          ...state.posts,
+          {
+            ...action.payload,
+            id: shortid.generate(),
+          },
+        ],
       };
     case "ADD_LIKE":
-      const { username, like, comment } = action.payload;
-      const updatedPosts = state.posts.map((post) => {
-        if (post.username === username) {
-          return {
-            ...post,
-            likes: [...post.likes, like],
-            comments: [...post.comments, comment],
-          };
-        }
-        return post;
-      });
       return {
         ...state,
-        posts: updatedPosts,
+        posts: state.posts.map((post) => {
+          if (post.id === action.payload.postId) {
+            return {
+              ...post,
+              likes: [...post.likes, action.payload.like],
+            };
+          }
+          return post;
+        }),
       };
     default:
       return state;

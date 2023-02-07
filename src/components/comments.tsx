@@ -6,14 +6,15 @@ interface Props {
   username: string;
   isLogged: boolean;
   comments: string[];
+  postId: string;
 }
 
-const Comments = ({ username, isLogged, comments }: Props) => {
+const Comments = ({ username, isLogged, comments, postId }: Props) => {
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
 
   const handleComment = (user: string, comment: string) => {
-    dispatch(addCommentAction(user, comment));
+    dispatch(addCommentAction(user, comment, postId));
     setComment("");
   };
 
@@ -22,6 +23,7 @@ const Comments = ({ username, isLogged, comments }: Props) => {
   return (
     <div>
       <ul>
+        <h3>Comments</h3>
         {comments.map((comment, index) => (
           <li key={index}>{comment}</li>
         ))}

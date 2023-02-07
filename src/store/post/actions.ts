@@ -28,8 +28,8 @@ export interface SetLikeAction {
   type: "ADD_LIKE";
   payload: {
     username: string;
-    like: number;
-    comment: string;
+    like: string;
+    postId: string;
   };
 }
 export interface SetRemovePostAction {
@@ -41,6 +41,7 @@ export interface SetRemovePostAction {
 export interface SetCommentPostAction {
   type: "ADD_COMMENT";
   payload: {
+    postId: string;
     username: string;
     comment: string;
   };
@@ -68,24 +69,26 @@ export const removePostAction = (post: SetPostAction["payload"]) => ({
 
 export const addLikeAction = (
   username: string,
-  like: number,
-  comment: string
+  like: string,
+  postId: string
 ): SetLikeAction => ({
   type: "ADD_LIKE",
   payload: {
     username,
     like,
-    comment,
+    postId,
   },
 });
 
 export const addCommentAction = (
   username: string,
-  comment: string
+  comment: string,
+  postId: string
 ): SetCommentPostAction => ({
   type: "ADD_COMMENT",
   payload: {
     username,
+    postId,
     comment,
   },
 });
